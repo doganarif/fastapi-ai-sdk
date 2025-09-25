@@ -5,41 +5,31 @@ This library provides a complete set of utilities for building FastAPI backends
 that are compatible with the Vercel AI SDK frontend.
 """
 
-from .models import (
-    # Message lifecycle
-    StartEvent,
+from .decorators import ai_endpoint, streaming_endpoint, tool_endpoint
+from .models import (  # Message lifecycle; Text parts; Reasoning parts; Source references; File reference; Structured data; Tool calls; Steps; Error; Base
+    DataEvent,
+    ErrorEvent,
+    FileEvent,
     FinishEvent,
-    # Text parts
-    TextStartEvent,
-    TextDeltaEvent,
-    TextEndEvent,
-    # Reasoning parts
-    ReasoningStartEvent,
+    FinishStepEvent,
     ReasoningDeltaEvent,
     ReasoningEndEvent,
-    # Source references
-    SourceURLEvent,
+    ReasoningStartEvent,
     SourceDocumentEvent,
-    # File reference
-    FileEvent,
-    # Structured data
-    DataEvent,
-    # Tool calls
-    ToolInputStartEvent,
-    ToolInputDeltaEvent,
-    ToolInputAvailableEvent,
-    ToolOutputAvailableEvent,
-    # Steps
+    SourceURLEvent,
+    StartEvent,
     StartStepEvent,
-    FinishStepEvent,
-    # Error
-    ErrorEvent,
-    # Base
     StreamEvent,
+    TextDeltaEvent,
+    TextEndEvent,
+    TextStartEvent,
+    ToolInputAvailableEvent,
+    ToolInputDeltaEvent,
+    ToolInputStartEvent,
+    ToolOutputAvailableEvent,
 )
-from .stream import AIStreamBuilder, AIStream
 from .response import create_ai_stream_response
-from .decorators import ai_endpoint, streaming_endpoint, tool_endpoint
+from .stream import AIStream, AIStreamBuilder
 
 __version__ = "0.1.0"
 

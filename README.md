@@ -1,29 +1,29 @@
 # FastAPI AI SDK
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI--green.svg)](https://fastapi.tiangolo.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A Pythonic helper library for building FastAPI applications that integrate with the [Vercel AI SDK](https://sdk.vercel.ai/). This library provides a seamless way to stream AI responses from your FastAPI backend to your Next.js frontend.
 
-## ✨ Features
+## Features
 
-- 🚀 **Full Vercel AI SDK Compatibility** - Implements the complete AI SDK protocol specification
-- 📝 **Type-Safe with Pydantic** - Full type hints and validation for all events
-- 🔄 **Streaming Support** - Built-in Server-Sent Events (SSE) streaming
-- 🎯 **Easy Integration** - Simple decorators and utilities for FastAPI
-- 🛠️ **Flexible Builder Pattern** - Intuitive API for constructing AI streams
-- 🧪 **Well Tested** - Comprehensive test coverage
-- 📚 **Fully Documented** - Complete documentation with examples
+- **Full Vercel AI SDK Compatibility** - Implements the complete AI SDK protocol specification
+- **Type-Safe with Pydantic** - Full type hints and validation for all events
+- **Streaming Support** - Built-in Server-Sent Events (SSE) streaming
+- **Easy Integration** - Simple decorators and utilities for FastAPI
+- **Flexible Builder Pattern** - Intuitive API for constructing AI streams
+- **Well Tested** - Comprehensive test coverage
+- **Fully Documented** - Complete documentation with examples
 
-## 📦 Installation
+## Installation
 
 ```bash
 pip install fastapi-ai-sdk
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Basic Example
 
@@ -66,7 +66,7 @@ export default function Chat() {
 }
 ```
 
-## 📖 Documentation
+## Documentation
 
 ### Stream Events
 
@@ -200,7 +200,7 @@ async def generate_story(prompt: str):
     return builder
 ```
 
-## 🧪 Testing
+## Testing
 
 Run the test suite:
 
@@ -218,7 +218,7 @@ pytest tests/test_models.py
 pytest -v
 ```
 
-## 🛠️ Development
+## Development
 
 ### Setup Development Environment
 
@@ -254,14 +254,14 @@ This project uses:
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 👤 Author
+## Author
 
 **Arif Dogan**
 
 - Email: me@arif.sh
 - GitHub: [@doganarif](https://github.com/doganarif)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -271,13 +271,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Vercel AI SDK](https://sdk.vercel.ai/) for the excellent frontend SDK
 - [FastAPI](https://fastapi.tiangolo.com/) for the amazing web framework
 - [Pydantic](https://docs.pydantic.dev/) for data validation
 
-## 📚 Resources
+## Resources
 
 - [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)

@@ -7,21 +7,18 @@ AI SDK compatible endpoints in FastAPI.
 
 import functools
 import inspect
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional
 
-from fastapi import Request, Response
+from fastapi import Response
 from fastapi.responses import StreamingResponse
 
 from .response import create_ai_stream_response
 from .stream import AIStream, AIStreamBuilder
 
 
-async def _handle_builder_result(
-    result: AIStreamBuilder, auto_start: bool
-) -> StreamingResponse:
+async def _handle_builder_result(result: AIStreamBuilder) -> StreamingResponse:
     """Handle AIStreamBuilder return type."""
-    if auto_start and not result._started:
-        result.start()
+    # The stream() method will handle auto-start internally
     stream = result.build()
     return create_ai_stream_response(stream)
 
@@ -51,7 +48,7 @@ def ai_endpoint(
     auto_finish: bool = True,
     message_id_param: Optional[str] = None,
     include_request: bool = False,
-):
+) -> Callable:
     """
     Decorator for FastAPI endpoints to automatically handle AI SDK streaming.
 
@@ -82,7 +79,7 @@ def ai_endpoint(
 
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
+        async def wrapper(*args: Any, **kwargs: Any) -> Response:
             # Extract message_id if parameter specified
             message_id = None
             if message_id_param and message_id_param in kwargs:
@@ -97,13 +94,16 @@ def ai_endpoint(
 
             # Handle different return types
             if isinstance(result, AIStreamBuilder):
-                return await _handle_builder_result(result, auto_start)
+                return await _handle_builder_result(result)
 
             elif isinstance(result, AIStream):
                 return create_ai_stream_response(result)
 
-            elif inspect.isasyncgenfunction(func):
-                return create_ai_stream_response(result)
+            elif inspect.isasyncgen(result):
+                # Result is an async generator object
+                # Wrap in AIStream to handle event-to-SSE conversion
+                stream = AIStream(result)
+                return create_ai_stream_response(stream)
 
             elif isinstance(result, (StreamingResponse, Response)):
                 return result
@@ -119,7 +119,7 @@ def ai_endpoint(
 def streaming_endpoint(
     chunk_size: int = 10,
     delay: float = 0.1,
-):
+) -> Callable:
     """
     Decorator for simple text streaming endpoints.
 
@@ -144,7 +144,7 @@ def streaming_endpoint(
 
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
+        async def wrapper(*args: Any, **kwargs: Any) -> Response:
             # Call the original function
             result = (
                 await func(*args, **kwargs)
@@ -170,7 +170,7 @@ def streaming_endpoint(
     return decorator
 
 
-def tool_endpoint(tool_name: str):
+def tool_endpoint(tool_name: str) -> Callable:
     """
     Decorator for tool call endpoints.
 
@@ -195,8 +195,7 @@ def tool_endpoint(tool_name: str):
 
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
-            import json
+        async def wrapper(*args: Any, **kwargs: Any) -> Response:
             import uuid
 
             # Extract input from kwargs or request body

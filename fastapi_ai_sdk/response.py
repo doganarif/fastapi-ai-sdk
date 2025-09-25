@@ -5,9 +5,9 @@ This module provides helper functions for creating FastAPI responses
 that are compatible with the Vercel AI SDK.
 """
 
-from typing import AsyncGenerator, Dict, Optional, Union
+from collections.abc import AsyncGenerator
+from typing import Any, Dict, Optional, Union
 
-from fastapi import Response
 from fastapi.responses import StreamingResponse
 
 from .stream import AIStream
@@ -62,7 +62,7 @@ class AIStreamResponse(StreamingResponse):
         status_code: int = 200,
         headers: Optional[Dict[str, str]] = None,
         media_type: str = "text/event-stream",
-        background=None,
+        background: Optional[Any] = None,
     ):
         """
         Initialize an AIStreamResponse.
@@ -90,7 +90,7 @@ class AIStreamResponse(StreamingResponse):
     def from_ai_stream(
         cls,
         ai_stream: AIStream,
-        **kwargs,
+        **kwargs: Any,
     ) -> "AIStreamResponse":
         """
         Create an AIStreamResponse from an AIStream.
@@ -123,10 +123,11 @@ async def stream_text_response(
     Returns:
         A FastAPI StreamingResponse
     """
-    from .stream import AIStreamBuilder
     import asyncio
 
-    async def generate():
+    from .stream import AIStreamBuilder
+
+    async def generate() -> AsyncGenerator[str, None]:
         builder = AIStreamBuilder(message_id=message_id)
 
         # Start message
@@ -134,7 +135,7 @@ async def stream_text_response(
 
         # Start text
         text_id = f"txt_{id(text)}"
-        from .models import TextStartEvent, TextDeltaEvent, TextEndEvent, FinishEvent
+        from .models import FinishEvent, TextDeltaEvent, TextEndEvent, TextStartEvent
 
         yield TextStartEvent(id=text_id).to_sse()
 

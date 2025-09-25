@@ -5,29 +5,31 @@ Run with:
     OPENAI_API_KEY=your_key uvicorn examples.llm_integration:app --reload
 """
 
-import os
 import asyncio
-from typing import Optional, AsyncGenerator
-from fastapi import FastAPI, HTTPException
+import os
+from collections.abc import AsyncGenerator
+from typing import Optional
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from fastapi_ai_sdk import (
-    AIStreamBuilder,
     AIStream,
+    AIStreamBuilder,
     ai_endpoint,
     create_ai_stream_response,
 )
 from fastapi_ai_sdk.models import (
-    StartEvent,
-    TextStartEvent,
-    TextDeltaEvent,
-    TextEndEvent,
-    ReasoningStartEvent,
+    ErrorEvent,
+    FinishEvent,
     ReasoningDeltaEvent,
     ReasoningEndEvent,
-    FinishEvent,
-    ErrorEvent,
+    ReasoningStartEvent,
+    StartEvent,
+    TextDeltaEvent,
+    TextEndEvent,
+    TextStartEvent,
 )
 
 app = FastAPI(title="LLM Integration Example")

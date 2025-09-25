@@ -18,7 +18,6 @@ from fastapi_ai_sdk import (
     AIStreamBuilder,
     ai_endpoint,
     tool_endpoint,
-    DataEvent,
 )
 
 app = FastAPI(title="Advanced AI Assistant")

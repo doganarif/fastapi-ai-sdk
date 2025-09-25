@@ -1,30 +1,29 @@
 """Tests for Pydantic models."""
 
 import json
+
 import pytest
-from typing import Dict, Any
 
 from fastapi_ai_sdk.models import (
-    StartEvent,
+    DataEvent,
+    ErrorEvent,
+    FileEvent,
     FinishEvent,
-    TextStartEvent,
-    TextDeltaEvent,
-    TextEndEvent,
-    ReasoningStartEvent,
+    FinishStepEvent,
     ReasoningDeltaEvent,
     ReasoningEndEvent,
-    SourceURLEvent,
+    ReasoningStartEvent,
     SourceDocumentEvent,
-    FileEvent,
-    DataEvent,
-    ToolInputStartEvent,
-    ToolInputDeltaEvent,
-    ToolInputAvailableEvent,
-    ToolOutputAvailableEvent,
+    SourceURLEvent,
+    StartEvent,
     StartStepEvent,
-    FinishStepEvent,
-    ErrorEvent,
-    StreamEvent,
+    TextDeltaEvent,
+    TextEndEvent,
+    TextStartEvent,
+    ToolInputAvailableEvent,
+    ToolInputDeltaEvent,
+    ToolInputStartEvent,
+    ToolOutputAvailableEvent,
 )
 
 

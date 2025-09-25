@@ -4,9 +4,10 @@ Pydantic models for all Vercel AI SDK event types.
 This module defines all the event types that can be streamed to the Vercel AI SDK frontend.
 """
 
-from typing import Any, Dict, Literal, Optional, Union
-from pydantic import BaseModel, Field, field_validator
 from abc import ABC
+from typing import Any, Dict, Literal, Union
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class StreamEvent(BaseModel, ABC):
@@ -16,14 +17,9 @@ class StreamEvent(BaseModel, ABC):
     All events must have a 'type' field that identifies the event type.
     """
 
+    model_config = ConfigDict(extra="forbid")
+
     type: str
-
-    class Config:
-        """Pydantic configuration."""
-
-        extra = "forbid"  # Disallow extra fields
-        validate_assignment = True
-        use_enum_values = True
 
     def to_sse(self) -> str:
         """
@@ -41,13 +37,10 @@ class StreamEvent(BaseModel, ABC):
 class StartEvent(StreamEvent):
     """Event indicating the start of a message."""
 
+    model_config = ConfigDict(populate_by_name=True)
+
     type: Literal["start"] = "start"
     message_id: str = Field(..., alias="messageId")
-
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
 
 
 class FinishEvent(StreamEvent):
@@ -116,10 +109,7 @@ class SourceURLEvent(StreamEvent):
     source_id: str = Field(..., alias="sourceId")
     url: str
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class SourceDocumentEvent(StreamEvent):
@@ -130,10 +120,7 @@ class SourceDocumentEvent(StreamEvent):
     media_type: str = Field(..., alias="mediaType")
     title: str
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 # File reference event
@@ -146,10 +133,7 @@ class FileEvent(StreamEvent):
     url: str
     media_type: str = Field(..., alias="mediaType")
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 # Structured data event
@@ -198,10 +182,7 @@ class ToolInputStartEvent(StreamEvent):
     tool_call_id: str = Field(..., alias="toolCallId")
     tool_name: str = Field(..., alias="toolName")
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class ToolInputDeltaEvent(StreamEvent):
@@ -211,10 +192,7 @@ class ToolInputDeltaEvent(StreamEvent):
     tool_call_id: str = Field(..., alias="toolCallId")
     input_text_delta: str = Field(..., alias="inputTextDelta")
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class ToolInputAvailableEvent(StreamEvent):
@@ -225,10 +203,7 @@ class ToolInputAvailableEvent(StreamEvent):
     tool_name: str = Field(..., alias="toolName")
     input: Dict[str, Any]
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class ToolOutputAvailableEvent(StreamEvent):
@@ -238,10 +213,7 @@ class ToolOutputAvailableEvent(StreamEvent):
     tool_call_id: str = Field(..., alias="toolCallId")
     output: Dict[str, Any]
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 # Step events
@@ -268,10 +240,7 @@ class ErrorEvent(StreamEvent):
     type: Literal["error"] = "error"
     error_text: str = Field(..., alias="errorText")
 
-    class Config:
-        """Pydantic configuration."""
-
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 # Type aliases for convenience

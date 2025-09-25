@@ -1,22 +1,19 @@
 """Tests for stream building and management."""
 
-import asyncio
 import json
-import pytest
-from typing import List
 
+import pytest
+
+from fastapi_ai_sdk.models import (
+    ErrorEvent,
+    FinishEvent,
+    StartEvent,
+    TextDeltaEvent,
+)
 from fastapi_ai_sdk.stream import (
     AIStream,
     AIStreamBuilder,
-    TextStreamContext,
     create_simple_text_stream,
-)
-from fastapi_ai_sdk.models import (
-    StartEvent,
-    FinishEvent,
-    TextDeltaEvent,
-    ErrorEvent,
-    DataEvent,
 )
 
 

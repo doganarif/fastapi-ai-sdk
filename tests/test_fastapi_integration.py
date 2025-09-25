@@ -1,29 +1,27 @@
 """Tests for FastAPI integration and decorators."""
 
 import json
-import pytest
-from typing import Optional, AsyncGenerator
-from unittest.mock import AsyncMock, MagicMock
+from typing import Optional
 
 import httpx
-from fastapi import FastAPI, Request
+import pytest
+from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from fastapi.testclient import TestClient
 
 from fastapi_ai_sdk import (
-    AIStreamBuilder,
     AIStream,
-    create_ai_stream_response,
+    AIStreamBuilder,
     ai_endpoint,
+    create_ai_stream_response,
     streaming_endpoint,
     tool_endpoint,
 )
 from fastapi_ai_sdk.response import (
     AIStreamResponse,
-    stream_text_response,
     stream_json_response,
+    stream_text_response,
 )
-
 
 # Create test FastAPI app
 app = FastAPI()
@@ -81,7 +79,7 @@ async def async_generator_endpoint():
     """Endpoint that returns an async generator."""
 
     async def generate():
-        from fastapi_ai_sdk.models import StartEvent, TextDeltaEvent, FinishEvent
+        from fastapi_ai_sdk.models import FinishEvent, StartEvent, TextDeltaEvent
 
         yield StartEvent(message_id="gen_1")
         yield TextDeltaEvent(id="txt_1", delta="Generated ")
@@ -385,14 +383,17 @@ class TestAsyncIntegration:
 
     async def test_async_client_streaming(self):
         """Test streaming with async httpx client."""
-        async with httpx.AsyncClient(app=app, base_url="http://test") as client:
-            async with client.stream("GET", "/simple-stream") as response:
-                assert response.status_code == 200
+        transport = httpx.ASGITransport(app=app)
+        async with (
+            httpx.AsyncClient(transport=transport, base_url="http://test") as client,
+            client.stream("GET", "/simple-stream") as response,
+        ):
+            assert response.status_code == 200
 
-                events = []
-                async for line in response.aiter_lines():
-                    if line.startswith("data: ") and line != "data: [DONE]":
-                        events.append(json.loads(line.replace("data: ", "")))
+            events = []
+            async for line in response.aiter_lines():
+                if line.startswith("data: ") and line != "data: [DONE]":
+                    events.append(json.loads(line.replace("data: ", "")))
 
-                assert events[0]["type"] == "start"
-                assert any(e["type"] == "text-delta" for e in events)
+            assert events[0]["type"] == "start"
+            assert any(e["type"] == "text-delta" for e in events)
